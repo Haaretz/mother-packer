@@ -2,3 +2,4 @@ htz/
 node_modules/
 .history/
 dist/
+package-lock.json
