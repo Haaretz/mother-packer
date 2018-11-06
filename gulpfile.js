@@ -27,19 +27,7 @@ gulp.task("watch", function() {
 
     gulp
       .src(name)
-      .pipe(
-        replace(
-          new RegExp(
-            `@haaretz/(${global.libs.map(({ lib }) => lib).join("|")})`,
-            "g"
-          ),
-          `${__dirname.replace(
-            /\\/g,
-            "\\\\"
-          )}/dist/packages/apps/haaretz.co.il/$1/src/index.js`
-        )
-      )
-
+      .pipe(replaceImprot())
       .pipe(
         gulp.dest(
           newpath
@@ -104,19 +92,7 @@ function copyLibs2app() {
 function fixImports() {
   gulp
     .src([__dirname + "/dist/packages/apps/haaretz.co.il/**/*.js"])
-    .pipe(
-      replace(
-        new RegExp(
-          `@haaretz/(${global.libs.map(({ lib }) => lib).join("|")})`,
-          "g"
-        ),
-        `${__dirname.replace(
-          /\\/g,
-          "\\\\"
-        )}/dist/packages/apps/haaretz.co.il/$1/src/index.js`
-      )
-    )
-
+    .pipe(replaceImprot())
     .pipe(gulp.dest(__dirname + "/dist/packages/apps/haaretz.co.il"))
     .on("finish", () => {
       global.libs.map(({ lib }) => searchInFiles(`@haaretz/${lib}`));
@@ -145,6 +121,19 @@ function walkSync(dir, filelist) {
     }
   });
   return filelist;
+}
+
+function replaceImprot() {
+  return replace(
+    new RegExp(
+      `@haaretz/(${global.libs.map(({ lib }) => lib).join("|")})`,
+      "g"
+    ),
+    `${__dirname.replace(
+      /\\/g,
+      "\\\\"
+    )}/dist/packages/apps/haaretz.co.il/$1/src/index.js`
+  );
 }
 
 function searchInFiles(

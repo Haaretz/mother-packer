@@ -10,14 +10,14 @@ run the folowwings
 2. npm i
 3. gulp
 4. cd dist
-   now run your app
 5. yarn && yarn bootstrap && HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev
 
 open another shell
 
-6. switch to the project folder
-7. run gulp watch
-8. open the project with the browser http://local.haaretz.co.il:3000/{articleid}
+6. switch to the project folder (htz)
+7. yarn
+8. gulp watch
+9. open the project with the browser http://local.haaretz.co.il:3000/{articleid}
 
 Now the htz folder in the project is your working environment.
 You can edit it and see the chanes apply live
