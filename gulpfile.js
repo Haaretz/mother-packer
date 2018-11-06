@@ -12,6 +12,8 @@ global.libs = [
   { parent: "components", lib: "htz-components" }
 ];
 
+global.isWin = process.platform === "win32";
+global.slsh = global.isWin ? "\\" : "/";
 gulp.task("watch", function() {
   watch(`${__dirname}/htz/packages/`, { recursive: true }, (evt, name) => {
     let lib = null;
@@ -21,7 +23,26 @@ gulp.task("watch", function() {
         lib = curlib;
       }
     });
-    if (!lib || !name.endsWith(".js")) return;
+
+    if (!name.endsWith(".js")) return;
+
+    if (!lib) {
+      let newpath = name
+        .replace(
+          `${global.slsh}htz${global.slsh}`,
+          `${global.slsh}dist${global.slsh}`
+        )
+        .split(global.slsh)
+        .slice(0, -1)
+        .join(global.slsh);
+
+      gulp
+        .src(name)
+        .pipe(replaceImprot())
+        .pipe(gulp.dest(newpath));
+      console.log(newpath);
+      return;
+    }
 
     let newpath = name.split(lib)[1].replace(/\\/g, "/");
     newpath = `${__dirname}/dist/packages/apps/haaretz.co.il/${lib}${newpath}`;
