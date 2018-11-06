@@ -3,5 +3,4 @@ node_modules/
 .history/
 dist/
 package-lock.json
-*.xml
-*.iml
+.idea/
