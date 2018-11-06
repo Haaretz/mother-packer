@@ -20,4 +20,4 @@ open another shell
 9. open the project with the browser http://local.haaretz.co.il:3000/{articleid}
 
 Now the htz folder in the project is your working environment.
-You can edit it and see the chanes apply live
+You can edit it and see the chagnes apply live
