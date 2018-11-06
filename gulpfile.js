@@ -8,6 +8,7 @@ const rimraf = require("rimraf");
 
 global.libs = [
   { parent: "libs", lib: "app-utils" },
+  { parent: "components", lib: "htz-theme" },
   { parent: "components", lib: "htz-components" }
 ];
 
@@ -50,7 +51,13 @@ function build() {
     console.log("done deleting");
     global.currentLibs = [...global.libs];
     gulp
-      .src([__dirname + "/htz/**/*", __dirname + "/htz/**/.*"])
+      .src([
+        __dirname + "/htz/**/*",
+        __dirname + "/htz/**/.*",
+        `!${__dirname}/htz/node_modules/`,
+        `!${__dirname}/htz/node_modules/**`,
+        `!${__dirname}/htz/**/node_modules/**`
+      ])
       .pipe(newer("dist"))
       .pipe(gulp.dest("dist"))
       .on("finish", () => {
