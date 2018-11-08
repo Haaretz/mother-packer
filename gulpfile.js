@@ -15,6 +15,8 @@ global.libs = [
 global.isWin = process.platform === "win32";
 global.slsh = global.isWin ? "\\" : "/";
 gulp.task("watch", function() {
+  let app = process.argv[3] ? process.argv[3].slice(2) : "haaretz.co.il";
+
   watch(`${__dirname}/htz/packages/`, { recursive: true }, (evt, name) => {
     let lib = null;
     console.log(name, evt);
@@ -45,11 +47,11 @@ gulp.task("watch", function() {
     }
 
     let newpath = name.split(lib)[1].replace(/\\/g, "/");
-    newpath = `${__dirname}/dist/packages/apps/haaretz.co.il/${lib}${newpath}`;
+    newpath = `${__dirname}/dist/packages/apps/${app}/${lib}${newpath}`;
 
     gulp
       .src(name)
-      .pipe(replaceImprot())
+      .pipe(replaceImprot(app))
       .pipe(
         gulp.dest(
           newpath
@@ -64,11 +66,15 @@ gulp.task("watch", function() {
 });
 
 gulp.task("default", function() {
-  build();
+  build("haaretz.co.il");
 });
 
-function build() {
-  rimraf(`${__dirname}/dist/packages/apps/haaretz.co.il`, function() {
+gulp.task("ppage", function() {
+  build("purchase-page");
+});
+
+function build(app) {
+  rimraf(`${__dirname}/dist/packages/apps/${app}`, function() {
     console.log("done deleting");
     global.currentLibs = [...global.libs];
     gulp
@@ -82,7 +88,7 @@ function build() {
       .pipe(newer("dist"))
       .pipe(gulp.dest("dist"))
       .on("finish", () => {
-        copyLibs2app();
+        copyLibs2app(app);
       });
   });
 }
@@ -97,7 +103,7 @@ function copyFelaMonolitic() {
     );
 }
 
-function copyLibs2app() {
+function copyLibs2app(app) {
   let { lib, parent } = global.currentLibs.pop();
   console.log(lib);
   openDir(`${lib}`);
@@ -107,32 +113,30 @@ function copyLibs2app() {
       `${__dirname}/htz/packages/${parent}/${lib}/src/**/*`,
       `${__dirname}/htz/packages/${parent}/${lib}/src/index.js`
     ])
-    .pipe(gulp.dest(`${__dirname}/dist/packages/apps/haaretz.co.il/${lib}/src`))
+    .pipe(gulp.dest(`${__dirname}/dist/packages/apps/${app}/${lib}/src`))
     .on("finish", () => {
       if (global.currentLibs.length) {
-        copyLibs2app();
+        copyLibs2app(app);
       } else {
-        fixImports();
+        fixImports(app);
       }
     });
 }
 
-function fixImports() {
+function fixImports(app) {
   gulp
-    .src([__dirname + "/dist/packages/apps/haaretz.co.il/**/*.js"])
-    .pipe(replaceImprot())
-    .pipe(gulp.dest(__dirname + "/dist/packages/apps/haaretz.co.il"))
+    .src([`${__dirname}/dist/packages/apps/${app}/**/*.js`])
+    .pipe(replaceImprot(app))
+    .pipe(gulp.dest(`${__dirname}/dist/packages/apps/${app}`))
     .on("finish", () => {
       global.libs.map(({ lib }) => searchInFiles(`@haaretz/${lib}`));
     });
 }
 
-function openDir(dir) {
+function openDir(dir, app) {
   try {
-    if (
-      !fs.existsSync(`${__dirname}/dist/packages/apps/haaretz.co.il/${dir}`)
-    ) {
-      fs.mkdirSync(`${__dirname}/dist/packages/apps/haaretz.co.il/${dir}`);
+    if (!fs.existsSync(`${__dirname}/dist/packages/apps/${app}/${dir}`)) {
+      fs.mkdirSync(`${__dirname}/dist/packages/apps/${app}/${dir}`);
     }
   } catch {}
 }
@@ -151,7 +155,7 @@ function walkSync(dir, filelist) {
   return filelist;
 }
 
-function replaceImprot() {
+function replaceImprot(app) {
   return replace(
     new RegExp(
       `@haaretz/(${global.libs.map(({ lib }) => lib).join("|")})`,
@@ -160,7 +164,7 @@ function replaceImprot() {
     `${__dirname.replace(
       /\\/g,
       "\\\\"
-    )}/dist/packages/apps/haaretz.co.il/$1/src/index.js`
+    )}/dist/packages/apps/${app}/$1/src/index.js`
   );
 }
 
