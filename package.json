@@ -4,19 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall" : "rm -rf htz && rm -rf dist && git clone --recurse-submodules git@github.com:Haaretz/htz-frontend.git htz && gulp && cd dist && concurrently \"yarn && yarn bootstrap && HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev\" \"gulp watch\" ",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev\" \"gulp watch\"",
+    "boot": "concurrently \"yarn && yarn bootstrap && HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev\" \"gulp watch\"",
     "run": "node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-flow-remove-types": "^1.0.0",
     "ncp": "^2.0.0",
     "rimraf": "^2.6.2"
   },
   "devDependencies": {
     "gulp-debug": "^4.0.0",
+    "concurrently": "^4.0.1",
     "gulp-filter": "^5.1.0",
     "gulp-newer": "^1.4.0",
     "gulp-replace": "^1.0.0",

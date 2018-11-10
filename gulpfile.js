@@ -65,11 +65,13 @@ gulp.task("watch", function() {
   });
 });
 
-gulp.task("default", function() {
+gulp.task("default", function(done) {
+  global.done = done;
   build("haaretz.co.il");
 });
 
-gulp.task("ppage", function() {
+gulp.task("ppage", function(done) {
+  global.done = done;
   build("purchase-page");
 });
 
@@ -80,9 +82,10 @@ function build(app) {
     gulp
       .src([
         __dirname + "/htz/**/*",
-        __dirname + "/htz/**/.*",
+        `${__dirname}/htz/**/packages/**/.*`,
         `!${__dirname}/htz/node_modules/`,
         `!${__dirname}/htz/node_modules/**`,
+        `!${__dirname}/htz/**/dist/**`,
         `!${__dirname}/htz/**/node_modules/**`
       ])
       .pipe(newer("dist"))
@@ -130,6 +133,7 @@ function fixImports(app) {
     .pipe(gulp.dest(`${__dirname}/dist/packages/apps/${app}`))
     .on("finish", () => {
       global.libs.map(({ lib }) => searchInFiles(`@haaretz/${lib}`));
+      global.done()
     });
 }
 
