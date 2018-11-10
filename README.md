@@ -6,7 +6,8 @@ Instructions
 1. Open teminal and go to your project folder
 2. run git clone git@github.com:Haaretz/mother-packer.git
 3. cd mother-packer 
-4. run npm i
+4. make sure you got no other sever running on the same port
+5. run npm i
 
 Now the htz folder in the project is your working environment.
 You can edit it and see the chagnes apply live at local.haaretz.co.il
