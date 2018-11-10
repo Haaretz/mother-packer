@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall" : "rm -rf htz && rm -rf dist && git clone --recurse-submodules git@github.com:Haaretz/htz-frontend.git htz && gulp && cd dist && concurrently \"yarn && yarn bootstrap && HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev\" \"gulp watch\" ",
+    "postinstall": "rm -rf htz && rm -rf dist && git clone --recurse-submodules git@github.com:Haaretz/htz-frontend.git htz && gulp && cd dist && concurrently \"yarn && yarn bootstrap && HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev\" \"gulp watch\" ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev\" \"gulp watch\"",
+    "start": "concurrently \"cd dist && HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev\" \"gulp watch\"",
+    "start_ppage": "gulp ppage && concurrently \"cd dist && HOSTNAME=local yarn workspace @haaretz/purchase-page dev\" \"gulp watch --purchase-page\"",
+    "boot_ppage": "gulp ppage && concurrently \"cd dist && yarn && yarn bootstrap && HOSTNAME=local yarn workspace @haaretz/purchase-page dev\" \"gulp watch --purchase-page\"",
     "boot": "concurrently \"yarn && yarn bootstrap && HOSTNAME=local yarn workspace @haaretz/haaretz.co.il dev\" \"gulp watch\"",
     "run": "node index.js"
   },

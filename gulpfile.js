@@ -132,7 +132,7 @@ function fixImports(app) {
     .pipe(replaceImprot(app))
     .pipe(gulp.dest(`${__dirname}/dist/packages/apps/${app}`))
     .on("finish", () => {
-      global.libs.map(({ lib }) => searchInFiles(`@haaretz/${lib}`));
+      //global.libs.map(({ lib }) => searchInFiles(`@haaretz/${lib}`));
       global.done()
     });
 }
