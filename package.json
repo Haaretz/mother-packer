@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "gulp": "^4.0.0",
+    "gulp-cli": "^2.0.1",
     "cross-env": "^5.2.0",
     "gulp-flow-remove-types": "^1.0.0",
     "ncp": "^2.0.0",
