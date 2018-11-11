@@ -40,7 +40,7 @@ gulp.task("watch", function() {
 
       gulp
         .src(name)
-        .pipe(replaceImprot())
+        .pipe(replaceImprot(app))
         .pipe(gulp.dest(newpath));
       console.log(newpath);
       return;
